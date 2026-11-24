@@ -31,11 +31,11 @@ class HistoryService
         $allRecords = $this->loadUserRecords();
 
         // Check if current session was paid in Page 15 (stored in Cache)
-        $cachedSessionIntent = Cache::get('payment_intent_session_SES-20261011-0984_qris');
+        $cachedSessionIntent = Cache::get('payment_intent_session_SES-20261011-0984_qris') ?? Cache::get('payment_intent_session_SES-20261011-8934_qris');
         if ($cachedSessionIntent && $cachedSessionIntent['status'] === 'successful') {
             // Update active session record in history
             foreach ($allRecords as &$r) {
-                if ($r['reference'] === 'SES-20261011-0984') {
+                if ($r['reference'] === 'SES-20261011-0984' || $r['reference'] === 'SES-20261011-8934') {
                     $r['status'] = 'completed';
                     $r['payment_status'] = 'paid';
                     $r['receipt_ref'] = $cachedSessionIntent['receipt_ref'] ?? 'RCP-20261011-0421';
@@ -160,7 +160,7 @@ class HistoryService
             [
                 'id' => 'rec-001',
                 'type' => 'session',
-                'reference' => 'SES-20261011-0984',
+                'reference' => 'SES-20261011-8934',
                 'facility_name' => 'Mall XYZ Jakarta',
                 'facility_city' => 'Jakarta Selatan',
                 'facility_zone' => 'Zone A · Spot B1-A01',
@@ -185,10 +185,10 @@ class HistoryService
             [
                 'id' => 'rec-002',
                 'type' => 'reservation',
-                'reference' => 'NP-20261010-00421',
+                'reference' => 'RP-20261010-8621',
                 'facility_name' => 'Mall XYZ Jakarta',
                 'facility_city' => 'Jakarta Selatan',
-                'facility_zone' => 'Standard Slot Reservation',
+                'facility_zone' => 'Standard Slot',
                 'vehicle_plate' => 'B 1234 XYZ',
                 'vehicle_name' => 'Toyota Avanza',
                 'entry_time' => '10 Oct 2026, 14:00',
@@ -211,7 +211,7 @@ class HistoryService
             [
                 'id' => 'rec-003',
                 'type' => 'session',
-                'reference' => 'SES-20261008-0451',
+                'reference' => 'SES-20261008-4461',
                 'facility_name' => 'Grand Indonesia West Mall',
                 'facility_city' => 'Jakarta Pusat',
                 'facility_zone' => 'Basement 2 · Zone B',
@@ -237,15 +237,15 @@ class HistoryService
             [
                 'id' => 'rec-004',
                 'type' => 'session',
-                'reference' => 'SES-20261005-0199',
-                'facility_name' => 'Central Park Mall',
+                'reference' => 'SES-20261005-6199',
+                'facility_name' => 'Grandi Park Mall',
                 'facility_city' => 'Jakarta Barat',
                 'facility_zone' => 'Level 1 · Outer Lane',
                 'vehicle_plate' => 'B 1234 XYZ',
                 'vehicle_name' => 'Toyota Avanza',
                 'entry_time' => '05 Oct 2026, 18:30',
-                'exit_time' => '05 Oct 2026, 21:00',
-                'duration' => '2h 30m',
+                'exit_time' => '05 Oct 2026, 22:00',
+                'duration' => '3h 30m',
                 'amount' => 14000,
                 'formatted_amount' => 'Rp 14.000',
                 'status' => 'completed',
@@ -263,7 +263,7 @@ class HistoryService
             [
                 'id' => 'rec-005',
                 'type' => 'reservation',
-                'reference' => 'NP-20261002-00109',
+                'reference' => 'RP-20261002-0109',
                 'facility_name' => 'Senayan City',
                 'facility_city' => 'Jakarta Pusat',
                 'facility_zone' => 'VIP Parking Level P1',
