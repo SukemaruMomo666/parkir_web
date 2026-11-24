@@ -1,29 +1,44 @@
 @props(['active' => 'dashboard'])
+
 @php
-    $unreadNotifCount = app(\App\Services\NotificationService::class)->getUnreadCount();
-    $driverProfile = app(\App\Services\ProfileService::class)->getProfile(Auth::user());
+    $user = Auth::user();
+    $unreadNotifCount = 0;
+    if ($user) {
+        try {
+            $unreadNotifCount = app(\App\Services\NotificationService::class)->getUnreadCount();
+        } catch (\Throwable $e) {
+            $unreadNotifCount = 0;
+        }
+    }
+
+    $name = trim($user?->name ?? 'Prabu');
+    $parts = explode(' ', $name);
+    $initials = strtoupper(substr($parts[0] ?? 'P', 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : (strlen($parts[0]) > 1 ? substr($parts[0], 1, 1) : 'A')));
+    $firstName = $parts[0] ?? 'Prabu';
 @endphp
 
 <!-- DESKTOP AUTH NAVBAR -->
-<nav class="hidden md:block sticky top-0 w-full bg-[var(--surface)] border-b border-[var(--border)] z-50 shadow-xs" aria-label="Authenticated Navigation">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-4 lg:gap-8">
+<nav class="sticky top-0 w-full bg-white/95 backdrop-blur-md border-b border-slate-100 z-50 transition-all duration-200" aria-label="Authenticated Navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
         
         <!-- Left: Brand + Navigation Links -->
-        <div class="flex items-center gap-6 lg:gap-8 h-full min-w-0">
+        <div class="flex items-center gap-8 h-full min-w-0">
             <!-- Brand -->
-            <a href="/" class="flex items-center gap-2.5 shrink-0 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] rounded-lg py-1 px-1 -ml-1">
-                <div class="w-8 h-8 bg-[var(--primary)] rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-105 transition-transform shrink-0">
-                    N
+            <a href="/" class="flex items-center gap-2.5 shrink-0 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-5 h-5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 19V5l12 14V5" />
+                    </svg>
                 </div>
-                <span class="font-bold text-xl tracking-tight text-[var(--primary)] shrink-0">Nusa<span class="text-[var(--accent)]">Park</span></span>
+                <span class="text-xl font-bold tracking-tight text-slate-900">Nusa<span class="text-blue-600">Park</span></span>
             </a>
 
             <!-- Navigation Links -->
-            <div class="flex items-center space-x-1 lg:space-x-1.5 h-full overflow-x-auto scrollbar-none">
+            <div class="hidden md:flex items-center gap-6 lg:gap-8 h-full">
                 @php
                     $navItems = [
                         ['id' => 'dashboard', 'label' => 'Dashboard', 'href' => '/dashboard'],
-                        ['id' => 'search', 'label' => 'Find Parking', 'href' => '/app/search'],
+                        ['id' => 'search', 'label' => 'Find Parking', 'href' => '/search'],
                         ['id' => 'active-parking', 'label' => 'Active Parking', 'href' => '/active-parking'],
                         ['id' => 'reservations', 'label' => 'Reservations', 'href' => '/reservations'],
                         ['id' => 'history', 'label' => 'History', 'href' => '/history'],
@@ -34,31 +49,28 @@
                 @foreach($navItems as $item)
                     @php $isCurrent = ($active === $item['id']); @endphp
                     <a href="{{ $item['href'] }}" 
-                       class="relative h-full flex items-center px-3 lg:px-3.5 text-xs lg:text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] rounded-t-sm
+                       class="relative py-2 text-sm font-medium transition-colors whitespace-nowrap
                               {{ $isCurrent 
-                                 ? 'text-[var(--primary)]' 
-                                 : 'text-[var(--text-muted)] hover:text-[var(--primary)]' }}">
-                        <span>{{ $item['label'] }}</span>
-                        @if($isCurrent)
-                            <span class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[var(--primary)] rounded-full"></span>
-                        @endif
+                                 ? 'text-blue-600 font-semibold after:absolute after:-bottom-4 after:left-0 after:right-0 after:h-0.5 after:bg-blue-600 after:rounded-full' 
+                                 : 'text-slate-600 hover:text-blue-600' }}">
+                        {{ $item['label'] }}
                     </a>
                 @endforeach
             </div>
         </div>
 
         <!-- Right: Notifications + User Account Menu -->
-        <div class="flex items-center gap-3 lg:gap-4 shrink-0">
-            <!-- Notifications -->
+        <div class="flex items-center gap-3.5 shrink-0">
+            <!-- Notifications Bell -->
             <a href="/notifications" 
-               class="relative p-2.5 {{ $active === 'notifications' ? 'text-[var(--primary)] bg-[var(--background)] ring-1 ring-[var(--border)]' : 'text-[var(--text-muted)] hover:text-[var(--primary)] hover:bg-[var(--background)]' }} transition-colors rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
+               class="relative p-2.5 text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors rounded-full"
                aria-label="View notifications">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
-                @if($unreadNotifCount > 0)
-                    <span id="desktop-notif-badge" class="absolute top-2 right-2 w-2 h-2 bg-[var(--danger)] rounded-full ring-2 ring-[var(--surface)]"></span>
+                @if($unreadNotifCount > 0 || true)
+                    <span id="desktop-notif-badge" class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
                 @endif
             </a>
 
@@ -66,187 +78,97 @@
             <div class="relative" id="user-menu-container">
                 <button type="button"
                         id="user-menu-button"
-                        class="flex items-center gap-2.5 p-1 pl-1.5 pr-3 bg-[var(--background)] border border-[var(--border)] rounded-full hover:border-[var(--primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] cursor-pointer"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        aria-controls="user-menu-dropdown">
-                    <div class="w-8 h-8 bg-blue-100 text-[var(--primary)] rounded-full flex items-center justify-center font-bold text-sm shrink-0">
-                        {{ $driverProfile['avatar_initials'] ?? 'U' }}
+                        class="flex items-center gap-2 p-1 pl-1.5 pr-2.5 bg-white border border-slate-200 rounded-full hover:border-slate-300 transition-all cursor-pointer shadow-xs">
+                    <div class="w-8 h-8 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold text-xs shrink-0">
+                        {{ $initials }}
                     </div>
-                    <span class="text-sm font-semibold text-[var(--text)]">{{ $driverProfile['first_name'] ?? (Auth::user()?->name ? explode(' ', trim(Auth::user()->name))[0] : 'Driver') }}</span>
-                    <svg id="user-menu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--text-muted)] group-hover:text-[var(--primary)] transition-transform duration-200">
+                    <span class="text-sm font-semibold text-slate-800 max-w-[110px] truncate">{{ $firstName }}</span>
+                    <svg id="user-menu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-400 transition-transform duration-200">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
                 
                 <div id="user-menu-dropdown"
-                     class="hidden absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden"
-                     role="menu"
-                     aria-orientation="vertical"
-                     aria-labelledby="user-menu-button">
-                    <div class="p-4 border-b border-[var(--border)] bg-slate-50/50">
-                        <div class="font-semibold text-sm text-[var(--text)]">{{ $driverProfile['name'] ?? (Auth::user()?->name ?? 'Driver Account') }}</div>
-                        <div class="text-xs text-[var(--text-muted)] truncate">{{ $driverProfile['email'] ?? (Auth::user()?->email ?? '') }}</div>
+                     class="hidden absolute right-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden py-1">
+                    <div class="p-4 border-b border-slate-100 bg-slate-50/70">
+                        <div class="font-bold text-sm text-slate-900 truncate">{{ $user?->name ?? 'Prabu' }}</div>
+                        <div class="text-xs text-slate-500 truncate">{{ $user?->email ?? 'prabu@example.com' }}</div>
                     </div>
                     <div class="py-1">
-                        <a href="/profile" class="block px-4 py-2 text-sm {{ $active === 'profile' ? 'text-[var(--primary)] font-semibold bg-[var(--background)]' : 'text-[var(--text-muted)]' }} hover:bg-[var(--background)] hover:text-[var(--primary)] transition-colors" role="menuitem">Profile</a>
-                        <a href="/settings" class="block px-4 py-2 text-sm text-[var(--text-muted)] hover:bg-[var(--background)] hover:text-[var(--primary)] transition-colors" role="menuitem">Settings</a>
+                        <a href="/profile" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors">Profile & Settings</a>
+                        <a href="/vehicles" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors">My Vehicles</a>
+                        <a href="/history" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors">Parking History</a>
                     </div>
-                    <div class="border-t border-[var(--border)] py-1">
-                        <a href="/logout" class="block px-4 py-2 text-sm text-[var(--danger)] hover:bg-red-50 transition-colors" role="menuitem">Sign out</a>
+                    <div class="border-t border-slate-100 py-1">
+                        <a href="/logout" class="block px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">Sign Out</a>
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile menu button -->
+            <button id="auth-mobile-menu-btn" class="md:hidden p-2 text-slate-600 hover:text-blue-600" aria-label="Toggle Mobile Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
         </div>
 
+    </div>
+
+    <!-- Mobile Drawer for Authenticated User -->
+    <div id="auth-mobile-menu" class="hidden md:hidden px-4 pt-2 pb-6 bg-white border-b border-slate-100 shadow-xl space-y-2">
+        <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl mb-2">
+            <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 font-bold text-sm flex items-center justify-center shrink-0">
+                {{ $initials }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <div class="text-sm font-bold text-slate-900 truncate">{{ $user?->name ?? 'Prabu' }}</div>
+                <div class="text-xs text-slate-500 truncate">{{ $user?->email ?? 'prabu@example.com' }}</div>
+            </div>
+        </div>
+
+        @foreach($navItems as $item)
+            @php $isCurrent = ($active === $item['id']); @endphp
+            <a href="{{ $item['href'] }}" class="block px-3 py-2 rounded-lg text-sm {{ $isCurrent ? 'text-blue-600 font-bold bg-blue-50' : 'text-slate-700 font-medium hover:bg-slate-50' }}">
+                {{ $item['label'] }}
+            </a>
+        @endforeach
+
+        <div class="pt-2 border-t border-slate-100">
+            <a href="/logout" class="block w-full text-center py-2.5 rounded-xl border border-red-200 text-red-600 font-semibold text-sm hover:bg-red-50">
+                Sign Out
+            </a>
+        </div>
     </div>
 </nav>
 
-<!-- MOBILE TOP BAR -->
-<div class="md:hidden sticky top-0 w-full bg-[var(--surface)] border-b border-[var(--border)] z-50 px-4 h-14 flex items-center justify-between shadow-sm">
-    <a href="/" class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-[var(--primary)] rounded-md flex items-center justify-center text-white font-bold text-base shadow-sm">
-            N
-        </div>
-        <span class="font-bold text-lg tracking-tight text-[var(--primary)]">Nusa<span class="text-[var(--accent)]">Park</span></span>
-    </a>
-    <div class="flex items-center gap-3">
-        <a href="/notifications" class="relative p-2 {{ $active === 'notifications' ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]' }}" aria-label="View notifications">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-            @if($unreadNotifCount > 0)
-                <span id="mobile-notif-badge" class="absolute top-1 right-2 w-2 h-2 bg-[var(--danger)] rounded-full border border-[var(--surface)]"></span>
-            @endif
-        </a>
-        <a href="/profile" class="w-8 h-8 bg-blue-100 text-[var(--primary)] rounded-full flex items-center justify-center font-bold text-sm {{ $active === 'profile' ? 'ring-2 ring-[var(--accent)]' : '' }}">
-            {{ $driverProfile['avatar_initials'] ?? (Auth::user()?->name ? strtoupper(substr(trim(Auth::user()->name), 0, 1)) : 'U') }}
-        </a>
-    </div>
-</div>
-
-<!-- MOBILE BOTTOM NAVIGATION -->
-<div class="md:hidden fixed bottom-0 w-full bg-[var(--surface)] border-t border-[var(--border)] z-50 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-    <div class="flex items-center justify-around h-16">
-        <a href="/dashboard" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'dashboard' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="9"></rect>
-                <rect x="14" y="3" width="7" height="5"></rect>
-                <rect x="14" y="12" width="7" height="9"></rect>
-                <rect x="3" y="16" width="7" height="5"></rect>
-            </svg>
-            <span class="text-[10px] font-medium">Dashboard</span>
-        </a>
-        
-        <a href="/app/search" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'search' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <span class="text-[10px] font-medium">Find</span>
-        </a>
-
-        <a href="/active-parking" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'active-parking' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <div class="relative">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[var(--success)] rounded-full border border-[var(--surface)]"></span>
-            </div>
-            <span class="text-[10px] font-medium">Active</span>
-        </a>
-
-        <a href="/reservations" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'reservations' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <span class="text-[10px] font-medium">Reserve</span>
-        </a>
-
-        <a href="/history" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'history' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            <span class="text-[10px] font-medium">History</span>
-        </a>
-
-        <a href="/profile" class="flex flex-col items-center justify-center w-full h-full gap-1 {{ $active === 'profile' ? 'text-[var(--primary)] font-semibold' : 'text-[var(--text-muted)]' }}">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <span class="text-[10px] font-medium">Profile</span>
-        </a>
-    </div>
-</div>
-
-<style>
-    /* Safe area padding for mobile bottom bar (iOS home indicator) */
-    @supports (padding-bottom: env(safe-area-inset-bottom)) {
-        .pb-safe {
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('user-menu-button');
-        const menu = document.getElementById('user-menu-dropdown');
-        const chevron = document.getElementById('user-menu-chevron');
-        const container = document.getElementById('user-menu-container');
+        const userBtn = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-menu-dropdown');
+        const userChevron = document.getElementById('user-menu-chevron');
 
-        if (!btn || !menu || !container) return;
+        if (userBtn && userDropdown) {
+            userBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+                if (userChevron) userChevron.classList.toggle('rotate-180');
+            });
 
-        function setMenuOpen(open) {
-            if (open) {
-                menu.classList.remove('hidden');
-                btn.setAttribute('aria-expanded', 'true');
-                if (chevron) chevron.classList.add('rotate-180');
-            } else {
-                menu.classList.add('hidden');
-                btn.setAttribute('aria-expanded', 'false');
-                if (chevron) chevron.classList.remove('rotate-180');
-            }
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target) && !userBtn.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                    if (userChevron) userChevron.classList.remove('rotate-180');
+                }
+            });
         }
 
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const isOpen = !menu.classList.contains('hidden');
-            setMenuOpen(!isOpen);
-        });
-
-        let hoverTimer = null;
-        container.addEventListener('mouseenter', function() {
-            clearTimeout(hoverTimer);
-            setMenuOpen(true);
-        });
-        container.addEventListener('mouseleave', function() {
-            hoverTimer = setTimeout(function() {
-                setMenuOpen(false);
-            }, 180);
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!container.contains(e.target)) {
-                setMenuOpen(false);
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                setMenuOpen(false);
-                btn.focus();
-            }
-        });
+        const mobBtn = document.getElementById('auth-mobile-menu-btn');
+        const mobMenu = document.getElementById('auth-mobile-menu');
+        if (mobBtn && mobMenu) {
+            mobBtn.addEventListener('click', function() {
+                mobMenu.classList.toggle('hidden');
+            });
+        }
     });
 </script>
