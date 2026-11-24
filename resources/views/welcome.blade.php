@@ -19,14 +19,79 @@
     <x-navbar active="home" />
 
     <!-- HERO SECTION -->
-    <section class="relative overflow-hidden pt-6 pb-16 lg:pt-10 lg:pb-24">
-        <!-- Subtle background glow -->
-        <div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-gradient-to-l from-blue-50/50 to-transparent pointer-events-none"></div>
+    <section class="relative overflow-hidden pt-4 pb-16 lg:pt-8 lg:pb-24 bg-white">
+        <!-- SVG ClipPath Definition for the Organic S-Curve -->
+        <svg width="0" height="0" class="absolute">
+            <defs>
+                <clipPath id="hero-organic-curve" clipPathUnits="objectBoundingBox">
+                    <path d="M 0.18,0 
+                             C 0.08,0.14 0,0.28 0,0.44 
+                             C 0,0.62 0.06,0.76 0.22,0.88 
+                             C 0.38,0.97 0.65,1 1,1 
+                             L 1,0 Z" />
+                </clipPath>
+            </defs>
+        </svg>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        <!-- Desktop Right Curved Graphic (Absolute spanning to right edge) -->
+        <div class="hidden lg:block absolute top-0 right-0 bottom-8 w-[54%] xl:w-[52%] z-10 pointer-events-auto">
+            <div class="relative w-full h-full overflow-hidden shadow-2xl bg-slate-900" style="clip-path: url(#hero-organic-curve);">
+                <!-- Parking Garage Photo -->
+                <img src="{{ asset('images/hero-parking.jpg') }}" alt="NusaPark Smart Parking System" class="w-full h-full object-cover object-center scale-105 hover:scale-100 transition-transform duration-1000" />
+
+                <!-- Subtle Ambient Gradient -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20 pointer-events-none"></div>
+
+                <!-- Overhead Digital Sign [P] Available 327 / 350 -->
+                <div class="absolute top-8 right-12 xl:right-16 flex flex-col items-center">
+                    <!-- Hanging Brackets -->
+                    <div class="flex justify-between w-32 px-4 -mb-1">
+                        <div class="w-0.5 h-6 bg-slate-500/80 shadow-sm"></div>
+                        <div class="w-0.5 h-6 bg-slate-500/80 shadow-sm"></div>
+                    </div>
+                    <!-- Sign Box -->
+                    <div class="flex items-center bg-slate-950/90 rounded-2xl p-2.5 sm:p-3 border-2 border-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.45)] backdrop-blur-md">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-600 flex items-center justify-center font-black text-xl text-white shadow-inner mr-3 shrink-0">
+                            P
+                        </div>
+                        <div class="pr-3">
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                                Available
+                            </div>
+                            <div class="text-lg sm:text-xl font-black tracking-tight text-white">
+                                <span class="text-emerald-400 font-extrabold">327</span> <span class="text-xs font-semibold text-slate-400">/ 350</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pillar B2 Marker -->
+                <div class="absolute top-[45%] left-[16%] -translate-y-1/2">
+                    <div class="bg-blue-600 text-white font-black text-xl xl:text-2xl px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.5)] border border-blue-400/50 flex items-center gap-1">
+                        <span>B2</span>
+                    </div>
+                </div>
+
+                <!-- Glowing Cyan Floor Directional Chevrons -->
+                <div class="absolute bottom-8 left-[58%] -translate-x-1/2 flex flex-col items-center gap-0.5 pointer-events-none drop-shadow-[0_0_12px_rgba(34,211,238,0.9)] opacity-90">
+                    <svg class="w-8 h-8 text-cyan-400 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 15l7-7 7 7"/>
+                    </svg>
+                    <svg class="w-8 h-8 text-cyan-400 -mt-4 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 15l7-7 7 7"/>
+                    </svg>
+                    <svg class="w-8 h-8 text-cyan-400 -mt-4 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 15l7-7 7 7"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <!-- Left Hero Content -->
-                <div class="lg:col-span-6 xl:col-span-6 z-10">
+                <div class="lg:col-span-7 xl:col-span-6 pt-2 pb-6">
                     <!-- Pill Badge -->
                     <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-semibold mb-6 shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -58,23 +123,23 @@
                     </div>
 
                     <!-- 4 Feature Highlights Row -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-100">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 border-t border-slate-100 max-w-2xl">
                         <!-- 1. Real-Time -->
-                        <div class="flex items-start gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                 </svg>
                             </div>
                             <div>
                                 <h4 class="text-xs font-bold text-slate-900 leading-tight">Real-Time</h4>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Slot availability</p>
+                                <p class="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">Slot availability</p>
                             </div>
                         </div>
 
                         <!-- 2. ANPR -->
-                        <div class="flex items-start gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                                     <circle cx="12" cy="13" r="3"/>
@@ -82,13 +147,13 @@
                             </div>
                             <div>
                                 <h4 class="text-xs font-bold text-slate-900 leading-tight">ANPR</h4>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Auto vehicle recognition</p>
+                                <p class="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">Auto vehicle recognition</p>
                             </div>
                         </div>
 
                         <!-- 3. Digital Payment -->
-                        <div class="flex items-start gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <rect x="2" y="5" width="20" height="14" rx="2"/>
                                     <line x1="2" y1="10" x2="22" y2="10"/>
@@ -96,13 +161,13 @@
                             </div>
                             <div>
                                 <h4 class="text-xs font-bold text-slate-900 leading-tight">Digital Payment</h4>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Cashless & secure</p>
+                                <p class="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">Cashless & secure</p>
                             </div>
                         </div>
 
                         <!-- 4. Smart Map -->
-                        <div class="flex items-start gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                     <circle cx="12" cy="10" r="2"/>
@@ -110,50 +175,22 @@
                             </div>
                             <div>
                                 <h4 class="text-xs font-bold text-slate-900 leading-tight">Smart Map</h4>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Navigate to your slot</p>
+                                <p class="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">Navigate to your slot</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Hero Graphic with Organic Cutout -->
-                <div class="lg:col-span-6 xl:col-span-6 relative">
-                    <div class="relative mx-auto max-w-lg lg:max-w-none">
-                        <!-- Curved Mask Container -->
-                        <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] sm:aspect-[16/11] bg-slate-900 group">
-                            <!-- High Quality Background Image -->
-                            <img src="{{ asset('images/hero-parking.jpg') }}" alt="NusaPark Modern Smart Parking Garage" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-
-                            <!-- Overlay Gradient for contrast -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-slate-950/20"></div>
-
-                            <!-- Live Available Floating Card (Top Right) -->
-                            <div class="absolute top-5 right-5 sm:top-6 sm:right-6 backdrop-blur-md bg-slate-950/85 border border-slate-700/60 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-xl">
-                                <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-base shadow-inner">
-                                    P
-                                </div>
-                                <div>
-                                    <div class="text-[11px] font-semibold tracking-wider text-emerald-400 uppercase flex items-center gap-1.5">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                        Available
-                                    </div>
-                                    <div class="text-base sm:text-lg font-extrabold text-white tracking-tight">
-                                        327 <span class="text-xs font-medium text-slate-400">/ 350</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pillar B2 Label -->
-                            <div class="absolute top-1/2 left-6 sm:left-8 -translate-y-1/2 backdrop-blur-md bg-blue-950/80 border border-blue-500/50 text-blue-400 font-extrabold text-lg px-3.5 py-1.5 rounded-xl shadow-lg">
-                                B2
-                            </div>
-
-                            <!-- Floor Glowing Navigation Indicator Overlay -->
-                            <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none opacity-80">
-                                <svg class="w-8 h-8 text-cyan-400 animate-bounce" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-                                </svg>
-                                <span class="text-[10px] uppercase font-bold tracking-widest text-cyan-300 drop-shadow">Drive Ahead</span>
+                <!-- Mobile & Tablet Visual (Shown only below lg) -->
+                <div class="lg:hidden mt-4">
+                    <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-100 aspect-[16/10] bg-slate-900">
+                        <img src="{{ asset('images/hero-parking.jpg') }}" alt="NusaPark Smart Parking" class="w-full h-full object-cover" />
+                        <!-- Mobile Available Card -->
+                        <div class="absolute top-4 right-4 bg-slate-950/90 border border-cyan-400 rounded-xl px-3 py-2 flex items-center gap-2.5 shadow-lg">
+                            <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-sm text-white">P</div>
+                            <div>
+                                <div class="text-[9px] uppercase tracking-wider text-cyan-400 font-bold">Available</div>
+                                <div class="text-sm font-extrabold text-white"><span class="text-emerald-400">327</span> / 350</div>
                             </div>
                         </div>
                     </div>
