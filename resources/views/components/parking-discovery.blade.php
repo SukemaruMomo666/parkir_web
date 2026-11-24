@@ -339,7 +339,7 @@
         <!-- RIGHT: INTERACTIVE MAP WITH FLOATING POPUP -->
         <div class="w-full lg:w-[52%] xl:w-[54%] rounded-3xl overflow-hidden shadow-lg border border-slate-200 relative min-h-[580px] lg:min-h-[640px] sticky top-28 bg-slate-100">
             <!-- Leaflet Map Container -->
-            <div id="interactiveMap" class="w-full h-full min-h-[580px] lg:min-h-[640px] z-10"></div>
+            <div id="interactiveMap" class="w-full h-full z-10" style="height: 640px; min-height: 580px; width: 100%;"></div>
 
             <!-- Map Controls (Zoom In/Out, Target) -->
             <div class="absolute bottom-6 right-6 flex flex-col gap-2 z-20">
@@ -544,12 +544,19 @@
             zoom: 14
         });
 
-        // CartoDB Positron Tiles (High aesthetics modern pastel map)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-            maxZoom: 19,
-            subdomains: 'abcd'
+        // OpenStreetMap Free Clean Tiles (No API key required, zero watermark, 100% free)
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
         }).addTo(map);
+
+        // Force Leaflet to recalculate container dimensions immediately
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 150);
+        window.addEventListener('resize', () => {
+            map.invalidateSize();
+        });
 
         // Custom Marker Pin Generator
         function createCustomPin(item, isActive = false) {
