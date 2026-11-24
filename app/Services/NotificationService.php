@@ -67,6 +67,8 @@ class NotificationService
         $all = $this->loadStoredNotifications();
 
         $unreadCount = 0;
+        $sessionCount = 0;
+        $bookingReceiptCount = 0;
         $byCategory = [
             'session' => 0,
             'reservation' => 0,
@@ -77,6 +79,12 @@ class NotificationService
             if (!$item['is_read']) {
                 $unreadCount++;
             }
+            if ($item['category'] === 'session') {
+                $sessionCount++;
+            }
+            if ($item['category'] === 'reservation' || $item['category'] === 'payment') {
+                $bookingReceiptCount++;
+            }
             if (isset($byCategory[$item['category']])) {
                 $byCategory[$item['category']]++;
             }
@@ -86,6 +94,8 @@ class NotificationService
             'total' => count($all),
             'unread' => $unreadCount,
             'read' => count($all) - $unreadCount,
+            'sessions' => $sessionCount,
+            'bookings_receipts' => $bookingReceiptCount,
             'by_category' => $byCategory,
         ];
     }
@@ -222,7 +232,7 @@ class NotificationService
                 'category_label' => 'Reservation',
                 'title' => 'Upcoming Slot Reservation Confirmed',
                 'message' => 'Advance slot reservation confirmed at Grand Indonesia West Mall for Hyundai Ioniq 5 (B 9012 EV) on 12 Oct 2026.',
-                'reference' => 'NP-20261012-0089',
+                'reference' => 'NP-20261012-0819',
                 'facility' => 'Grand Indonesia West Mall',
                 'vehicle_plate' => 'B 9012 EV',
                 'timestamp' => strtotime('2026-10-11 09:15:00'),
@@ -239,7 +249,7 @@ class NotificationService
                 'category_label' => 'Payment',
                 'title' => 'Payment Verified & Receipt Issued',
                 'message' => 'Payment of Rp 15.000 for reservation NP-20261010-00421 was settled successfully via QRIS Instant Pay.',
-                'reference' => 'RCP-20261010-0042',
+                'reference' => 'RCP-20261010-0842',
                 'facility' => 'Mall XYZ Jakarta',
                 'vehicle_plate' => 'B 1234 XYZ',
                 'timestamp' => strtotime('2026-10-10 13:45:00'),
@@ -273,7 +283,7 @@ class NotificationService
                 'category_label' => 'Refund',
                 'title' => 'Refund Processed: Rp 20.000',
                 'message' => 'Reservation NP-20261002-00109 at Senayan City was cancelled. Full refund of Rp 20.000 returned to your QRIS account.',
-                'reference' => 'RCP-20261002-0019',
+                'reference' => 'RCP-20261002-0819',
                 'facility' => 'Senayan City',
                 'vehicle_plate' => 'B 1234 XYZ',
                 'timestamp' => strtotime('2026-10-02 09:12:00'),
