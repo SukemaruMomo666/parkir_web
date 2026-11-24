@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
+@import '../../public/css/style.css' layer(components);
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/*.blade.php';
+@source '../views/**/*.blade.php';
+@source '../views';
+
+:root {
+    --primary: #0F172A;
+    --primary-light: #1E293B;
+    --accent: #2563EB;
+    --accent-hover: #1D4ED8;
+    --background: #F8FAFC;
+    --surface: #FFFFFF;
+    --text-main: #0F172A;
+    --text: #0F172A;
+    --text-muted: #475569;
+    --border: #E2E8F0;
+    
+    --success: #10B981;
+    --success-bg: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-bg: #FEF3C7;
+    --danger: #EF4444;
+    --danger-bg: #FEE2E2;
+
+    --font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+}
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    
+    --color-primary: #0F172A;
+    --color-primary-light: #1E293B;
+    --color-accent: #2563EB;
+    --color-accent-hover: #1D4ED8;
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-text-main: #0F172A;
+    --color-text: #0F172A;
+    --color-text-muted: #475569;
+    --color-border: #E2E8F0;
+    
+    --color-success: #10B981;
+    --color-success-bg: #D1FAE5;
+    --color-warning: #F59E0B;
+    --color-warning-bg: #FEF3C7;
+    --color-danger: #EF4444;
+    --color-danger-bg: #FEE2E2;
+
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+}
+
+@layer base {
+    *, ::after, ::before, ::backdrop {
+        border-color: var(--border);
+    }
+    body {
+        font-family: var(--font-family);
+        background-color: var(--background);
+        color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+@layer components {
+    .dashboard-card, .content-card {
+        background-color: var(--surface);
+        border-radius: var(--radius-xl);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+    }
+
+    .dashboard-card:hover, .content-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Stepper views for reservations */
+    .step-item {
+        display: none;
+    }
+    .step-item.active {
+        display: block;
+    }
+
+    /* Radio cards for vehicle / option selection */
+    .radio-card-input:checked + .radio-card-content {
+        border-color: var(--primary);
+        background-color: var(--surface);
+    }
+    .radio-card-input:checked + .radio-card-content .radio-check {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    .radio-card-input:checked + .radio-card-content .radio-check svg {
+        display: block;
+    }
+}
