@@ -14,5 +14,8 @@
 
     <!-- SHARED DISCOVERY COMPONENT (PUBLIC) -->
     <x-parking-discovery :isAuthenticated="false" />
+
+    <!-- FOOTER -->
+    <x-footer />
 </body>
 </html>
